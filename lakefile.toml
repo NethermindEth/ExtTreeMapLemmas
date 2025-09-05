@@ -1,0 +1,10 @@
+name = "ExtTreeMapLemmas"
+version = "0.1.0"
+defaultTargets = ["exttreemaplemmas"]
+
+[[lean_lib]]
+name = "ExtTreeMapLemmas"
+
+[[lean_exe]]
+name = "exttreemaplemmas"
+root = "Main"
