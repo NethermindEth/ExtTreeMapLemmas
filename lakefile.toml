@@ -8,3 +8,8 @@ name = "ExtTreeMapLemmas"
 [[lean_exe]]
 name = "exttreemaplemmas"
 root = "Main"
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+rev = "v4.22.0-rc2"

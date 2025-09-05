@@ -1,5 +1,6 @@
 import ExtTreeMapLemmas.ExtDTreeMap
-import Std.Data.ExtTreeMap
+import Std.Data.ExtTreeMap.Lemmas
+import Mathlib.Tactic
 
 namespace Std
 
@@ -43,6 +44,46 @@ theorem get?_mergeWith_at
           cases h₂ : DTreeMap.Const.get? t₂ k <;>
           simp [merge_values, DTreeMap.Const.get?_mergeWith, h₁, h₂]
 
+variable {k : α} {m m₁ m₂ : Std.ExtTreeMap α β cmp} {f : α → β → β → β}
+
+@[grind=]
+lemma mergeWith₀ (h₁ : k ∈ m₁) (h₂ : k ∈ m₂) :
+  (m₁.mergeWith f m₂)[k]? = .some (f k m₁[k] m₂[k]) := by
+  have h₁' : m₁[k]? = .some m₁[k] :=
+    Std.ExtTreeMap.getElem?_eq_some_getElem (t := m₁) (a := k) h₁
+  have h₂' : m₂[k]? = .some m₂[k] :=
+    Std.ExtTreeMap.getElem?_eq_some_getElem (t := m₂) (a := k) h₂
+  simp only [get?_mergeWith_at, h₁', h₂']
+
+@[grind=]
+lemma mergeWith₁ (h₁ : k ∈ m₁) (h₂ : k ∉ m₂) :
+  (m₁.mergeWith f m₂)[k]? = m₁[k]? :=  by
+  have h₁' : m₁[k]? = .some m₁[k] :=
+    Std.ExtTreeMap.getElem?_eq_some_getElem (t := m₁) (a := k) h₁
+  have h₂' : m₂[k]? = .none :=
+    Std.ExtTreeMap.getElem?_eq_none (t := m₂) (a := k) h₂
+  simp only [get?_mergeWith_at, h₁', h₂']
+
+@[grind=]
+lemma mergeWith₂ (h₁ : k ∉ m₁) (h₂ : k ∈ m₂) :
+  (m₁.mergeWith f m₂)[k]? = m₂[k]? := by
+  have h₁' : m₁[k]? = .none :=
+    Std.ExtTreeMap.getElem?_eq_none (t := m₁) (a := k) h₁
+  have h₂' : m₂[k]? = .some m₂[k] :=
+    Std.ExtTreeMap.getElem?_eq_some_getElem (t := m₂) (a := k) h₂
+  simp only [get?_mergeWith_at, h₁', h₂']
+
+@[grind=]
+lemma mergeWith₃ (h₁ : k ∉ m₁) (h₂ : k ∉ m₂) :
+  (m₁.mergeWith f m₂)[k]? = .none := by
+  have h₁' : m₁[k]? = .none :=
+    Std.ExtTreeMap.getElem?_eq_none (t := m₁) (a := k) h₁
+  have h₂' : m₂[k]? = .none :=
+    Std.ExtTreeMap.getElem?_eq_none (t := m₂) (a := k) h₂
+  simp only [get?_mergeWith_at, h₁', h₂']
+
 end ExtTreeMap
 
 end Std
+
+#min_imports
