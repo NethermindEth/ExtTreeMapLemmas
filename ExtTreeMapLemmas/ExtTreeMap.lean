@@ -54,7 +54,7 @@ theorem get?_mergeWith_at
           cases h₂ : DTreeMap.Const.get? t₂ k <;>
           simp [merge_values, DTreeMap.Const.get?_mergeWith, h₁, h₂]
 
-lemma mergeWith₀ (h₁ : k ∈ m₁) (h₂ : k ∈ m₂) :
+lemma mergeWith_of_mem_mem (h₁ : k ∈ m₁) (h₂ : k ∈ m₂) :
   (m₁.mergeWith f m₂)[k]? = .some (f k m₁[k] m₂[k]) := by
   have h₁' : m₁[k]? = .some m₁[k] :=
     getElem?_eq_some_getElem (t := m₁) (a := k) h₁
@@ -62,7 +62,7 @@ lemma mergeWith₀ (h₁ : k ∈ m₁) (h₂ : k ∈ m₂) :
     getElem?_eq_some_getElem (t := m₂) (a := k) h₂
   simp only [get?_mergeWith_at, h₁', h₂']
 
-lemma mergeWith₁ (h₁ : k ∈ m₁) (h₂ : k ∉ m₂) :
+lemma mergeWith_of_mem_left (h₁ : k ∈ m₁) (h₂ : k ∉ m₂) :
   (m₁.mergeWith f m₂)[k]? = m₁[k]? :=  by
   have h₁' : m₁[k]? = .some m₁[k] :=
     getElem?_eq_some_getElem (t := m₁) (a := k) h₁
@@ -70,7 +70,7 @@ lemma mergeWith₁ (h₁ : k ∈ m₁) (h₂ : k ∉ m₂) :
     getElem?_eq_none (t := m₂) (a := k) h₂
   simp only [get?_mergeWith_at, h₁', h₂']
 
-lemma mergeWith₂ (h₁ : k ∉ m₁) (h₂ : k ∈ m₂) :
+lemma mergeWith_of_mem_right (h₁ : k ∉ m₁) (h₂ : k ∈ m₂) :
   (m₁.mergeWith f m₂)[k]? = m₂[k]? := by
   have h₁' : m₁[k]? = .none :=
     getElem?_eq_none (t := m₁) (a := k) h₁
@@ -78,7 +78,7 @@ lemma mergeWith₂ (h₁ : k ∉ m₁) (h₂ : k ∈ m₂) :
     getElem?_eq_some_getElem (t := m₂) (a := k) h₂
   simp only [get?_mergeWith_at, h₁', h₂']
 
-lemma mergeWith₃ (h₁ : k ∉ m₁) (h₂ : k ∉ m₂) :
+lemma mergeWith_of_not_mem (h₁ : k ∉ m₁) (h₂ : k ∉ m₂) :
   (m₁.mergeWith f m₂)[k]? = .none := by
   have h₁' : m₁[k]? = .none :=
     getElem?_eq_none (t := m₁) (a := k) h₁
@@ -86,10 +86,10 @@ lemma mergeWith₃ (h₁ : k ∉ m₁) (h₂ : k ∉ m₂) :
     getElem?_eq_none (t := m₂) (a := k) h₂
   simp only [get?_mergeWith_at, h₁', h₂']
 
-grind_pattern mergeWith₀ => k ∈ m₁, k ∈ m₂, ExtTreeMap.mergeWith f m₁ m₂
-grind_pattern mergeWith₁ => k ∈ m₁, ExtTreeMap.mergeWith f m₁ m₂
-grind_pattern mergeWith₂ => k ∈ m₂, ExtTreeMap.mergeWith f m₁ m₂
-grind_pattern mergeWith₃ => (ExtTreeMap.mergeWith f m₁ m₂)[k]?
+grind_pattern mergeWith_of_mem_mem => k ∈ m₁, k ∈ m₂, ExtTreeMap.mergeWith f m₁ m₂
+grind_pattern mergeWith_of_mem_left => k ∈ m₁, ExtTreeMap.mergeWith f m₁ m₂
+grind_pattern mergeWith_of_mem_right => k ∈ m₂, ExtTreeMap.mergeWith f m₁ m₂
+grind_pattern mergeWith_of_not_mem => (ExtTreeMap.mergeWith f m₁ m₂)[k]?
 
 @[simp]
 lemma mergeWith_empty {f : α → β → β → β}
